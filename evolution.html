@@ -1,3 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From an autocomplete to a fleet — one year</title>
+</head>
+<body>
 <style>
   :root{
     --ink:#14201d;--ink-2:#1b2b27;--ink-3:#294039;
@@ -36,7 +44,8 @@
 
   .mini{display:flex;flex-wrap:wrap;align-items:center;gap:.4em;margin:.7em 0 .2em}
   .tok{display:inline-flex;align-items:center;gap:.32em;font-family:var(--mono);font-size:.68rem;font-weight:700;
-    padding:.28em .55em;border-radius:5px;background:var(--paper-2);color:var(--ink);border-top:3px solid var(--fog);white-space:nowrap}
+    padding:.28em .55em;border-radius:5px;background:var(--paper-2);color:var(--ink);border-top:3px solid var(--fog);
+    white-space:normal;overflow-wrap:anywhere;max-width:100%}
   .tok.you{background:var(--ink-2);color:var(--chalk);border-top:3px solid var(--chalk)}
   .tok.tool{border-top-color:var(--fog)}
   .tok.agent{border-top-color:var(--amber)}
@@ -140,7 +149,7 @@
             <span class="conn">&rarr;</span>
             <span class="tok tool">dimension AdminApp</span>
           </div>
-          <div class="sdesc">The AI <b>left the editor</b>. One Claude Code in a Windows terminal built a whole application &mdash; the dimension <b>AdminApp</b> (first commit Dec 7, 2025). It's grown to <b>200+ commits</b> and become one of the most valuable apps I have &mdash; my first taste of an agent that runs commands, not just writes lines.</div>
+          <div class="sdesc">The AI <b>left the editor</b>. One Claude Code in a Windows terminal built a whole application &mdash; the dimension <b>AdminApp</b> (first commit Dec 7, 2025). It's grown to <b>200+ commits</b> and become one of the most valuable apps I have &mdash; my first taste of an agent that runs commands, not just writes lines. My main box was still <b>Windows</b>, but I had a <b>Linux side machine</b> and was already comparing the two.</div>
         </div>
       </li>
 
@@ -148,15 +157,16 @@
         <div class="when">~ January 2026</div>
         <div class="card">
           <div class="htags"><span class="htag how">how</span></div>
-          <div class="stitle">Linux, tmux, Tailscale, beads &mdash; and the &ldquo;mayor&rdquo; idea</div>
+          <div class="stitle">The move to Linux &mdash; and the Gas Town spark</div>
           <div class="mini">
-            <span class="tok you">me</span><span class="conn">&rarr;</span>
-            <span class="tok agent"><svg class="ic"><use href="#spark"/></svg> Claude Code</span>
-            <span class="mult">&times;2 machines</span>
+            <span class="tok tool" style="border-top-color:var(--red)">Windows</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">Linux</span>
+            <span class="tok tool">tmux</span>
             <span class="tok tool">Tailscale</span>
             <span class="tok tool">beads</span>
           </div>
-          <div class="sdesc">A big month: moved to <b>Linux</b> and into <b>tmux</b>; put the machines on a <b>Tailscale</b> mesh; started tracking work as <b>beads</b>; and read Steve Yegge's <i>Welcome to Gas Town</i>, which planted the concept of a <b>mayor</b> &mdash; a dispatcher that hands out the work. (Still two machines, one session each.)</div>
+          <div class="sdesc">The pivotal month. After weeks of running Windows and Linux <b>side by side</b>, the verdict was clear &mdash; I <b>switched to Linux</b>. Claude Code is <b>native</b> there: it understands decades of Unix tooling and wields it fluently, where on Windows it had constantly fought a system it didn't really understand. I also meshed the machines with <b>Tailscale</b> and read Steve Yegge's <i>Welcome to Gas Town</i>, which inspired both <b>beads</b> and the <b>mayor</b> &mdash; a dispatcher that hands out work. (Still two machines, one session each.)</div>
         </div>
       </li>
 
@@ -173,6 +183,22 @@
             <span class="mult">in tmux windows</span>
           </div>
           <div class="sdesc">Multiple agents running at once in tmux windows &mdash; several workers going in parallel instead of one at a time. I was still the dispatcher.</div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">~ February 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Untethered &mdash; Mosh + tmux</div>
+          <div class="mini">
+            <span class="tok you">phone</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">Mosh</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">tmux on my servers</span>
+          </div>
+          <div class="sdesc">Installed <b>Mosh</b> on my phone to reach the servers and reattach to <b>tmux</b> &mdash; so I could check on and steer the work <b>remotely</b>, from anywhere, not just at my desk.</div>
         </div>
       </li>
 
@@ -285,14 +311,14 @@
         <div class="when">~ July 1, 2026</div>
         <div class="card">
           <div class="htags"><span class="htag how">how</span></div>
-          <div class="stitle">Magic words &amp; the tier ladder</div>
+          <div class="stitle">Magic words &amp; a safety ladder</div>
           <div class="mini">
             <span class="tok tool">stat &middot; sweep</span>
             <span class="tok worker">sling &middot; park</span>
             <span class="tok agent">ship it</span>
-            <span class="tok mayor">Tier 3 &middot; locked</span>
+            <span class="tok mayor">merge / deploy &middot; human only</span>
           </div>
-          <div class="sdesc">Gave the whole thing a control model: one <b>magic word</b> per action (stat, sweep, sling, ship it), graded by blast radius &mdash; and a <b>Tier 3 that's permanently empty</b>, so no shortcut ever merges, deploys, or touches production. That stays a deliberate, human-only call.</div>
+          <div class="sdesc">Gave the whole thing a control model: one <b>magic word</b> per action (stat, sweep, sling, ship it), graded by how far each one reaches &mdash; and the most dangerous actions (<b>merge, deploy, production</b>) get <b>no shortcut at all</b>. Those stay a deliberate, human-only call.</div>
         </div>
       </li>
 
@@ -309,6 +335,20 @@
             <span class="tok mayor">mayor <span class="mono-sub">&times;N</span></span>
           </div>
           <div class="sdesc">A new role: a <b>roaming advisor</b> that reviews the mayors and owns the <b>how</b> (method, policies), while I own the <b>what &amp; why</b>. The pieces finally became one model.</div>
+        </div>
+      </li>
+
+      <li class="stage era-now">
+        <div class="when">This week &middot; July 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Driving Claude from my phone</div>
+          <div class="mini">
+            <span class="tok you">phone</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok adv"><svg class="ic"><use href="#spark"/></svg> Claude remote control</span>
+          </div>
+          <div class="sdesc">Enabled <b>remote control</b> of Claude, so I can interact with it straight from my phone &mdash; reviewing, steering, even building this very timeline &mdash; without being at a machine. <i>(In fact, right now.)</i></div>
         </div>
       </li>
 
@@ -337,3 +377,6 @@
     </div>
   </div>
 </div>
+
+</body>
+</html>
