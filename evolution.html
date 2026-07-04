@@ -1,0 +1,306 @@
+<style>
+  :root{
+    --ink:#14201d;--ink-2:#1b2b27;--ink-3:#294039;
+    --paper:#e9e3d2;--paper-2:#ded6c0;--paper-line:#c8ba98;
+    --amber:#e2a63c;--red:#c04533;--sage:#6f9c81;--teal:#5f9ea0;
+    --fog:#93a49a;--chalk:#eef3ef;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  .page{background:var(--ink);color:var(--chalk);font-family:var(--serif);line-height:1.45;
+    min-height:100%;padding:clamp(20px,3.5vw,48px) clamp(16px,4vw,40px) 56px}
+  .wrap{max-width:760px;margin:0 auto}
+  .kicker{font-family:var(--mono);font-size:.76rem;letter-spacing:.22em;text-transform:uppercase;color:var(--amber)}
+  h1{font-weight:700;font-size:clamp(2rem,5.5vw,3.2rem);line-height:1.03;letter-spacing:-.015em;text-wrap:balance;margin:.35em 0 .15em}
+  .dek{color:var(--fog);font-size:clamp(1.05rem,2vw,1.2rem);font-style:italic;max-width:56ch;margin-bottom:2.2em}
+
+  /* timeline */
+  .tl{list-style:none;margin:0;padding:0 0 0 26px;position:relative}
+  .tl::before{content:"";position:absolute;left:7px;top:6px;bottom:34px;width:2px;
+    background:linear-gradient(var(--ink-3),var(--amber),var(--sage),var(--red))}
+  .stage{position:relative;margin-bottom:20px}
+  .stage::before{content:"";position:absolute;left:-26px;top:6px;width:16px;height:16px;border-radius:50%;
+    background:var(--ink);border:3px solid var(--era,var(--fog));box-shadow:0 0 0 3px var(--ink)}
+  .when{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--era,var(--fog));text-transform:uppercase}
+  .card{background:var(--paper);color:var(--ink);border-radius:6px;padding:14px 16px;margin-top:.4em;
+    border-left:4px solid var(--era,var(--fog));box-shadow:0 10px 24px -18px rgba(0,0,0,.8)}
+  .stitle{font-family:var(--serif);font-weight:700;font-size:1.15rem;letter-spacing:-.01em}
+  .sdesc{font-size:.92rem;color:#4a5852;margin-top:.4em;line-height:1.45}
+  .sdesc b{color:var(--ink)}
+  .htags{display:flex;gap:.35em;margin-bottom:.5em}
+  .htag{font-family:var(--mono);font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.18em .55em;border-radius:20px}
+  .htag.how{background:rgba(226,166,60,.18);color:#8a6a20;border:1px solid rgba(226,166,60,.55)}
+  .htag.what{background:rgba(111,156,129,.2);color:#33513f;border:1px solid rgba(111,156,129,.6)}
+  .legend2{display:flex;align-items:center;gap:.5em;flex-wrap:wrap;font-family:var(--mono);font-size:.72rem;color:var(--fog);margin:-1.4em 0 2em}
+
+  .mini{display:flex;flex-wrap:wrap;align-items:center;gap:.4em;margin:.7em 0 .2em}
+  .tok{display:inline-flex;align-items:center;gap:.32em;font-family:var(--mono);font-size:.68rem;font-weight:700;
+    padding:.28em .55em;border-radius:5px;background:var(--paper-2);color:var(--ink);border-top:3px solid var(--fog);white-space:nowrap}
+  .tok.you{background:var(--ink-2);color:var(--chalk);border-top:3px solid var(--chalk)}
+  .tok.tool{border-top-color:var(--fog)}
+  .tok.agent{border-top-color:var(--amber)}
+  .tok.mayor{border-top-color:var(--red)}
+  .tok.worker{border-top-color:var(--sage)}
+  .tok.adv{border-top-color:var(--amber);background:#f2ead4}
+  .tok .ic{width:13px;height:13px;color:var(--amber);flex:none}
+  .tok.mayor .ic{color:var(--red)}
+  .tok .mono-sub{font-weight:400;color:#6a776f}
+  .conn{color:var(--fog);font-family:var(--mono);font-size:.85rem}
+  .mult{font-family:var(--mono);font-size:.62rem;color:#6a776f}
+
+  .era-ide{--era:var(--fog)}
+  .era-term{--era:var(--amber)}
+  .era-fleet{--era:var(--sage)}
+  .era-now{--era:var(--red)}
+
+  .foot{font-family:var(--mono);font-size:.72rem;color:var(--fog);line-height:1.7;letter-spacing:.03em;
+    border-top:1px solid var(--ink-3);margin-top:1.6em;padding-top:1.1em}
+  .foot a{color:var(--amber)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="spark" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></symbol></svg>
+
+<div class="page">
+  <div class="wrap">
+    <div class="kicker">The road here &middot; Jul 2025 &rarr; Jul 2026</div>
+    <h1>From an autocomplete to a fleet.</h1>
+    <p class="dek">One year ago the AI lived inside my editor and I drove every keystroke. Here's how it grew, step by step, into a crew of agents I orchestrate.</p>
+    <div class="legend2"><span class="htag how">how</span> the way I work <span style="opacity:.45">&middot;</span> <span class="htag what">what</span> what I built</div>
+
+    <ol class="tl">
+
+      <li class="stage era-ide">
+        <div class="when">~ July 2025</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Copilot in Visual Studio</div>
+          <div class="mini">
+            <span class="tok you">me</span><span class="conn">&rarr;</span>
+            <span class="tok tool">Visual Studio <span class="mono-sub">· Copilot</span></span>
+          </div>
+          <div class="sdesc">Inline autocomplete inside the IDE. The AI finished my lines; I drove <b>every keystroke</b>. No agent, no tasks &mdash; just suggestions.</div>
+        </div>
+      </li>
+
+      <li class="stage era-ide">
+        <div class="when">~ August 2025</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Claude Sonnet in VS Code</div>
+          <div class="mini">
+            <span class="tok you">me</span><span class="conn">&rarr;</span>
+            <span class="tok tool">VS Code <span class="mono-sub">·</span> <svg class="ic"><use href="#spark"/></svg> Sonnet</span>
+          </div>
+          <div class="sdesc">A real Claude model in the editor &mdash; I could hand it a chunk of work and discuss it, still inside VS Code on Windows. The first repos where I put it to work &mdash; <b>dimension-peoplesoft-api-testing</b> and <b>web_ai_test</b> &mdash; date to late August 2025.</div>
+        </div>
+      </li>
+
+      <li class="stage era-term">
+        <div class="when">December 7, 2025</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span><span class="htag what">what</span></div>
+          <div class="stitle">Claude Code builds the AdminApp</div>
+          <div class="mini">
+            <span class="tok you">me</span><span class="conn">&rarr;</span>
+            <span class="tok agent"><svg class="ic"><use href="#spark"/></svg> Claude Code</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">dimension AdminApp</span>
+          </div>
+          <div class="sdesc">The AI <b>left the editor</b>. One Claude Code in a Windows terminal built a whole application &mdash; the dimension <b>AdminApp</b> (first commit Dec 7, 2025). It's grown to <b>200+ commits</b> and become one of the most valuable apps I have &mdash; my first taste of an agent that runs commands, not just writes lines.</div>
+        </div>
+      </li>
+
+      <li class="stage era-term">
+        <div class="when">~ January 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Linux, tmux, Tailscale, beads &mdash; and the &ldquo;mayor&rdquo; idea</div>
+          <div class="mini">
+            <span class="tok you">me</span><span class="conn">&rarr;</span>
+            <span class="tok agent"><svg class="ic"><use href="#spark"/></svg> Claude Code</span>
+            <span class="mult">&times;2 machines</span>
+            <span class="tok tool">Tailscale</span>
+            <span class="tok tool">beads</span>
+          </div>
+          <div class="sdesc">A big month: moved to <b>Linux</b> and into <b>tmux</b>; put the machines on a <b>Tailscale</b> mesh; started tracking work as <b>beads</b>; and read Steve Yegge's <i>Welcome to Gas Town</i>, which planted the concept of a <b>mayor</b> &mdash; a dispatcher that hands out the work. (Still two machines, one session each.)</div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">~ February 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">A parallel fleet</div>
+          <div class="mini">
+            <span class="tok you">me</span><span class="conn">&rarr;</span>
+            <span class="tok worker"><svg class="ic" style="color:var(--sage)"><use href="#spark"/></svg> worker</span>
+            <span class="tok worker"><svg class="ic" style="color:var(--sage)"><use href="#spark"/></svg> worker</span>
+            <span class="tok worker"><svg class="ic" style="color:var(--sage)"><use href="#spark"/></svg> worker</span>
+            <span class="mult">in tmux windows</span>
+          </div>
+          <div class="sdesc">Multiple agents running at once in tmux windows &mdash; several workers going in parallel instead of one at a time. I was still the dispatcher.</div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">~ February 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag what">what</span></div>
+          <div class="stitle">A client app, entirely Claude-built</div>
+          <div class="mini">
+            <span class="tok agent"><svg class="ic"><use href="#spark"/></svg> Claude</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">lobar-projects <span class="mono-sub">· repo, Feb 7</span></span>
+          </div>
+          <div class="sdesc">Built an entire app for a client &mdash; the <b>lobar-projects</b> repo (created Feb 7) &mdash; driven <b>end-to-end by Claude</b>, and let Claude fully control that repository: commits, pushes, all of it. A self-contained early experiment in autonomy, months before I trusted it on my main production work.</div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">February 19, 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag what">what</span></div>
+          <div class="stitle">Goodbye Hub &mdash; microservices go live</div>
+          <div class="mini">
+            <span class="tok tool">the Hub <span class="mono-sub">· retired</span></span>
+            <span class="conn">&rarr;</span>
+            <span class="tok worker">auth</span>
+            <span class="tok worker">jobs</span>
+            <span class="tok worker">email</span>
+            <span class="tok worker">relay</span>
+            <span class="mult">+ tests</span>
+          </div>
+          <div class="sdesc">Broke apart the monolithic <b>Dimension Hub</b> and replaced it with a set of <b>microservices</b> (auth, jobs, email, message, relay, storage, webhooks) &mdash; and thanks to Claude each one shipped <b>well tested</b>. The retirement commit said it best: <i>&ldquo;Goodbye Dimension Hub! Thanks for all your help over the years.&rdquo;</i></div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">~ March 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Multiple mayors &amp; a shared beads server</div>
+          <div class="mini">
+            <span class="tok mayor"><svg class="ic"><use href="#spark"/></svg> mayor <span class="mono-sub">· m1</span></span>
+            <span class="tok mayor"><svg class="ic"><use href="#spark"/></svg> mayor <span class="mono-sub">· m2</span></span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">federated beads</span>
+          </div>
+          <div class="sdesc">More than one mayor &mdash; really just <b>two tmux sessions on two machines</b>, each dispatching its own workers. And beads moved onto a <b>federated (Dolt) server</b>, so every machine shared one task list.</div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">~ April 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag what">what</span></div>
+          <div class="stitle">Prototyping real production config</div>
+          <div class="mini">
+            <span class="tok agent"><svg class="ic"><use href="#spark"/></svg> Claude</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">onramp <span class="mono-sub">· prototype</span></span>
+            <span class="conn">&rarr;</span>
+            <span class="tok mayor">production <span class="mono-sub">· last week</span></span>
+          </div>
+          <div class="sdesc">Used Claude to prototype a new configuration for our integrations (the <b>onramp</b> repo). It proved out over the following months and <b>shipped to production just last week</b> &mdash; the first time a Claude-built prototype became live infrastructure.</div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">~ May 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Worktrees finally click</div>
+          <div class="mini">
+            <span class="tok worker"><svg class="ic" style="color:var(--sage)"><use href="#spark"/></svg> worker</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">its own git worktree</span>
+          </div>
+          <div class="sdesc">A talk at the <b>April Ruby Meetup</b> planted the idea of git <b>worktrees</b>; it clicked about a month later. Now <b>every worker gets its own worktree + branch</b> &mdash; real isolation, so parallel agents never step on each other.</div>
+        </div>
+      </li>
+
+      <li class="stage era-fleet">
+        <div class="when">May 27, 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Onto a Team plan</div>
+          <div class="mini">
+            <span class="tok you">me</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok tool">Claude Team <span class="mono-sub">· org account</span></span>
+          </div>
+          <div class="sdesc">Moved from individual Claude accounts to a <b>Team plan</b> for the org &mdash; a shared workspace, admin controls, and room to run this at scale instead of one seat at a time.</div>
+        </div>
+      </li>
+
+      <li class="stage era-now">
+        <div class="when">~ late June 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">The rules get written down</div>
+          <div class="mini">
+            <span class="tok tool">persistent memory</span>
+            <span class="tok worker">workers: leave uncommitted</span>
+            <span class="tok mayor">mayor: commit &middot; push &middot; PR</span>
+          </div>
+          <div class="sdesc">The setup stopped being ad-hoc. Claude began keeping <b>persistent memory</b> of my preferences and policies (~Jun 22), and the commit rules crystallized: <b>workers leave changes uncommitted</b>; the <b>mayor commits, pushes, and opens PRs</b> (largely because Claude writes better commit messages than I do); merge is <b>never automated</b>; every PR needs a <b>human approval</b>.</div>
+        </div>
+      </li>
+
+      <li class="stage era-now">
+        <div class="when">~ July 1, 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">Magic words &amp; the tier ladder</div>
+          <div class="mini">
+            <span class="tok tool">stat &middot; sweep</span>
+            <span class="tok worker">sling &middot; park</span>
+            <span class="tok agent">ship it</span>
+            <span class="tok mayor">Tier 3 &middot; locked</span>
+          </div>
+          <div class="sdesc">Gave the whole thing a control model: one <b>magic word</b> per action (stat, sweep, sling, ship it), graded by blast radius &mdash; and a <b>Tier 3 that's permanently empty</b>, so no shortcut ever merges, deploys, or touches production. That stays a deliberate, human-only call.</div>
+        </div>
+      </li>
+
+      <li class="stage era-now">
+        <div class="when">This week &middot; July 2026</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">The advisor arrives</div>
+          <div class="mini">
+            <span class="tok adv"><svg class="ic"><use href="#spark"/></svg> advisor</span>
+            <span class="conn">+</span>
+            <span class="tok you">me</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok mayor">mayor <span class="mono-sub">&times;N</span></span>
+          </div>
+          <div class="sdesc">A new role: a <b>roaming advisor</b> that reviews the mayors and owns the <b>how</b> (method, policies), while I own the <b>what &amp; why</b>. The pieces finally became one model.</div>
+        </div>
+      </li>
+
+      <li class="stage era-now">
+        <div class="when">Now</div>
+        <div class="card">
+          <div class="htags"><span class="htag how">how</span></div>
+          <div class="stitle">One human, an advisor, and fleets</div>
+          <div class="mini">
+            <span class="tok adv"><svg class="ic"><use href="#spark"/></svg> advisor</span>
+            <span class="tok you">me</span>
+            <span class="conn">&rarr;</span>
+            <span class="tok mayor">mayor <span class="mono-sub">&times;N</span></span>
+            <span class="conn">&rarr;</span>
+            <span class="tok worker">transient workers</span>
+          </div>
+          <div class="sdesc">The current shape: I set the <b>what &amp; why</b>, the advisor helps manage the <b>how</b>, mayors run transient workers, and merge / deploy / prod stay locked to me.</div>
+        </div>
+      </li>
+
+    </ol>
+
+    <div class="foot">
+      One year: editor &rarr; terminal &rarr; a coordinated fleet. The tool stopped being something I type into and became something I run.<br>
+      <a href="https://dlwiii.github.io/operating-model/">&rarr; The operating model today</a>
+    </div>
+  </div>
+</div>
