@@ -1,0 +1,590 @@
+<style>
+  :root{
+    --ink:#14201d;--ink-2:#1b2b27;--ink-3:#294039;
+    --paper:#e9e3d2;--paper-2:#ded6c0;--paper-line:#c8ba98;
+    --amber:#e2a63c;      /* advisor / observe */
+    --red:#c04533;        /* dispatch / human authority */
+    --sage:#6f9c81;       /* workers */
+    --fog:#93a49a;--chalk:#eef3ef;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  .page{background:var(--ink);color:var(--chalk);font-family:var(--serif);line-height:1.45;
+    min-height:100%;padding:clamp(20px,3.5vw,48px) clamp(16px,4vw,44px) 48px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .kicker{font-family:var(--mono);font-size:.8rem;letter-spacing:.24em;text-transform:uppercase;color:var(--amber)}
+  h1{font-weight:700;font-size:clamp(2rem,5.5vw,3.4rem);line-height:1.02;letter-spacing:-.015em;
+    text-wrap:balance;margin:.35em 0 .15em}
+  .dek{color:var(--fog);font-size:clamp(1.05rem,2vw,1.25rem);font-style:italic;max-width:58ch;margin-bottom:1.8em}
+
+  .row{display:grid;grid-template-columns:1fr;gap:14px}
+  .band-label{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--fog);margin:1.4em 0 .5em;display:flex;align-items:center;gap:.7em}
+  .band-label::after{content:"";flex:1;height:1px;background:var(--ink-3)}
+
+  .card{background:var(--paper);color:var(--ink);border-radius:4px;padding:clamp(14px,2vw,22px);
+    box-shadow:0 12px 28px -18px rgba(0,0,0,.8)}
+  .card .role{font-family:var(--mono);font-weight:700;font-size:1.05rem;letter-spacing:.02em}
+  .card .desc{color:#4a5852;font-size:1rem;margin-top:.2em}
+  .card .desc b{color:var(--ink)}
+
+  .lane{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:620px){.lane{grid-template-columns:1fr}.fleets{grid-template-columns:1fr!important}}
+  .stop{background:var(--paper-2);color:var(--ink);border:1px dashed var(--paper-line);border-radius:4px;padding:.85em;text-align:center}
+  .stop.now{border:2px solid var(--amber);background:#f2ead4}
+  .stop .n{font-family:var(--mono);font-weight:700;font-size:1.1rem}
+  .stop .w{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#6a776f;margin-top:.2em}
+  .badge{display:inline-block;font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.12em;
+    background:var(--amber);color:#3a2c07;padding:.2em .5em;border-radius:3px;margin-bottom:.5em}
+
+  .flow{display:flex;align-items:center;justify-content:center;gap:.7em;margin:.7em 0;
+    font-family:var(--mono);font-size:.82rem;letter-spacing:.04em}
+  .flow .obs{color:var(--amber)}
+  .flow .dis{color:var(--red)}
+  .flow .arr{font-size:1.1rem}
+
+  .you{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:4px;text-align:center;
+    padding:clamp(14px,2vw,20px)}
+  .you .role{font-family:var(--mono);font-weight:700;font-size:1.15rem;color:var(--amber)}
+  .you .desc{color:var(--fog);margin-top:.25em}
+
+  .fleets{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fleet{background:var(--paper-2);border-radius:4px;padding:.9em;border-top:4px solid var(--red)}
+  .fleet .m{font-family:var(--mono);font-weight:700;font-size:1rem}
+  .fleet .sub{color:#5a6862;font-size:.86rem;margin:.1em 0 .6em}
+  .cubes{display:flex;flex-wrap:wrap;gap:5px}
+  .cube{font-family:var(--mono);font-size:.66rem;background:rgba(111,156,129,.2);
+    border:1px solid rgba(111,156,129,.55);color:#33513f;border-radius:3px;padding:.22em .45em}
+  .cube.more{background:transparent;border-style:dashed;color:#6a776f}
+  .pin{font-family:var(--mono);font-size:.74rem;color:var(--sage);letter-spacing:.06em;text-align:center;margin-bottom:.6em}
+  .worker-rule{font-family:var(--mono);font-size:.72rem;color:var(--fog);text-align:center;margin-top:.8em}
+
+  /* tier ladder */
+  .tiers{display:grid;gap:8px}
+  .tier{display:grid;grid-template-columns:5.5rem 1fr auto;gap:1em;align-items:center;
+    background:var(--ink-2);border-left:5px solid var(--sage);border-radius:4px;padding:.7em .9em}
+  .tier .lv{font-family:var(--mono);font-weight:700;font-size:.9rem;color:var(--sage);letter-spacing:.04em}
+  .tier .txt{font-size:1rem;color:var(--chalk)}
+  .tier .txt b{color:#fff}
+  .tier .word{font-family:var(--mono);font-size:.82rem;color:var(--fog)}
+  .tier.t2{border-left-color:var(--amber)}
+  .tier.t2 .lv{color:var(--amber)}
+  .tier.t3{border-left-color:var(--red);background:#241a17}
+  .tier.t3 .lv{color:var(--red)}
+  .tier.t3 .txt b{color:var(--red)}
+  .tier.t3 .word{color:var(--red);font-weight:700}
+
+  .foot{font-family:var(--mono);font-size:.74rem;color:var(--fog);line-height:1.8;letter-spacing:.03em;
+    border-top:1px solid var(--ink-3);margin-top:2em;padding-top:1.1em}
+</style>
+
+<div class="page">
+  <div class="wrap">
+    <div class="kicker">Operating Model &middot; how the work gets run</div>
+    <h1>One human, a roaming advisor,<br>and fleets that never touch prod.</h1>
+    <p class="dek">Not one chatbot &mdash; a small crew of AI agents run like a shop: isolated workers, a dispatcher, a human review gate, and a locked top tier.</p>
+
+    <style>
+      .omap{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:6px;padding:22px 20px;overflow-x:auto}
+      .omap .heads{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:600px;margin:0 auto}
+      .omap .hcol{display:flex;flex-direction:column;align-items:center}
+      .omap .node{background:var(--paper);color:var(--ink);border-radius:4px;padding:.8em 1em;
+        text-align:center;border-top:4px solid var(--fog);width:100%}
+      .omap .node.human{border-top-color:var(--red)}
+      .omap .node.advisor{border-top-color:var(--amber)}
+      .omap .nt{font-family:var(--mono);font-weight:700;font-size:1.02rem}
+      .omap .nt .x{font-weight:400;color:#6a776f}
+      .omap .nd{font-size:.8rem;color:#4a5852;margin-top:.25em;line-height:1.34}
+      .omap .chan{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;
+        text-align:center;margin:.55em 0 .1em;line-height:1.4}
+      .omap .chan .a{display:block;width:0;height:0;margin:0 auto .12em;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid currentColor}
+      .omap .chan.what{color:var(--red)}
+      .omap .chan.how{color:var(--amber)}
+      .omap .mayors-band{border-top:1px dashed var(--ink-3);margin-top:.4em;padding-top:1em}
+      .omap .band-cap{text-align:center;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;
+        text-transform:uppercase;color:var(--sage);margin-bottom:.7em}
+      .omap .mayors{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+      .omap .mayor{background:var(--paper);border-radius:4px;border-top:4px solid var(--sage);
+        padding:.75em .85em;text-align:center;min-width:158px}
+      .omap .mt{font-family:var(--mono);font-weight:700;font-size:.9rem;color:var(--ink)}
+      .omap .ms{font-size:.72rem;color:#5a6862;margin:.12em 0 .6em}
+      .omap .wk{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+      .omap .w{width:15px;height:15px;border-radius:50%;border:1.5px dashed var(--sage);background:rgba(111,156,129,.22)}
+      .omap .wlabel{font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;color:#6a776f;
+        text-transform:uppercase;margin-top:.45em}
+      .omap .note{text-align:center;font-family:var(--mono);font-size:.64rem;color:var(--fog);
+        margin-top:1em;letter-spacing:.04em;line-height:1.7}
+      .omap .note b.what{color:var(--red)}
+      .omap .note b.how{color:var(--amber)}
+      @media(max-width:560px){.omap .heads{grid-template-columns:1fr;max-width:320px}}
+    </style>
+    <div class="band-label">1 &middot; The shape &mdash; you, one advisor, several mayors</div>
+    <section class="omap" aria-label="Operating model overview">
+      <div class="heads">
+        <div class="hcol">
+          <div class="node human">
+            <div class="nt">YOU <span class="x">&times;1</span></div>
+            <div class="nd">the work &mdash; objectives, priorities, sign-off</div>
+          </div>
+          <div class="chan what"><span class="a"></span> what &amp; why</div>
+        </div>
+        <div class="hcol">
+          <div class="node advisor">
+            <div class="nt">Advisor <span class="x">&times;1</span></div>
+            <div class="nd">helps you manage the mayors &mdash; method, policies, review</div>
+          </div>
+          <div class="chan how"><span class="a"></span> how</div>
+        </div>
+      </div>
+
+      <div class="mayors-band">
+        <div class="band-cap">&mdash; you both talk to the mayors, as needed &mdash;</div>
+        <div class="mayors">
+          <div class="mayor">
+            <div class="mt">mayor &middot; dimension</div>
+            <div class="ms">runs its workers &middot; never merges</div>
+            <div class="wk"><i class="w"></i><i class="w"></i><i class="w"></i><i class="w"></i></div>
+            <div class="wlabel">transient workers</div>
+          </div>
+          <div class="mayor">
+            <div class="mt">mayor &middot; client #1</div>
+            <div class="ms">runs its workers &middot; never merges</div>
+            <div class="wk"><i class="w"></i><i class="w"></i><i class="w"></i></div>
+            <div class="wlabel">transient workers</div>
+          </div>
+          <div class="mayor">
+            <div class="mt">mayor &middot; portal</div>
+            <div class="ms">runs its workers &middot; never merges</div>
+            <div class="wk"><i class="w"></i><i class="w"></i><i class="w"></i></div>
+            <div class="wlabel">transient workers</div>
+          </div>
+          <div class="mayor">
+            <div class="mt">mayor &middot; aws</div>
+            <div class="ms">runs its workers &middot; never merges</div>
+            <div class="wk"><i class="w"></i><i class="w"></i></div>
+            <div class="wlabel">transient workers</div>
+          </div>
+          <div class="mayor">
+            <div class="mt">mayor &middot; client #2</div>
+            <div class="ms">runs its workers &middot; never merges</div>
+            <div class="wk"><i class="w"></i><i class="w"></i></div>
+            <div class="wlabel">transient workers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">You own the <b class="what">what &amp; why</b> &middot; the advisor helps you manage the mayors &mdash; the <b class="how">how</b>.<br>Mayors run transient workers &mdash; merge / deploy / prod stays with you alone.</div>
+    </section>
+
+    <div class="band-label">2 &middot; Anatomy of a worker &mdash; transient, isolated, disposable</div>
+    <style>
+      .worker{background:var(--ink-2);border:2px dashed var(--ink-3);border-radius:8px;
+        padding:18px 18px 20px;position:relative;overflow-x:auto}
+      .worker-cap{display:inline-block;background:var(--ink);color:var(--sage);
+        font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+        padding:.18em .6em;border:1px solid var(--ink-3);border-radius:3px;margin-bottom:.9em}
+      .worker-cap .tr{color:#6a776f}
+      .parts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:.5em}
+      @media(max-width:720px){.parts{grid-template-columns:1fr 1fr}}
+      @media(max-width:420px){.parts{grid-template-columns:1fr}}
+      .part{background:var(--paper);color:var(--ink);border-radius:5px;padding:.75em .8em;
+        display:flex;flex-direction:column;gap:.35em;border-top:4px solid var(--fog)}
+      .part.tree{border-top-color:var(--sage)}
+      .part.agent{border-top-color:var(--amber)}
+      .part.beads{border-top-color:var(--red)}
+      .part .plabel{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:#6a776f}
+      .part .pname{font-family:var(--mono);font-weight:700;font-size:.98rem}
+      .part .pdesc{font-size:.76rem;color:#4a5852;line-height:1.34}
+      .part.tmux .chrome{display:flex;gap:5px;margin-bottom:.1em}
+      .part.tmux .chrome i{width:9px;height:9px;border-radius:50%;background:#c9b98f}
+      .part .branch{font-family:var(--mono);font-size:.7rem;background:rgba(111,156,129,.18);
+        border:1px solid rgba(111,156,129,.5);color:#33513f;border-radius:3px;padding:.15em .4em;align-self:flex-start}
+      .agents{display:flex;flex-wrap:wrap;gap:5px}
+      .agents .a{font-family:var(--mono);font-size:.68rem;background:rgba(226,166,60,.16);
+        border:1px solid rgba(226,166,60,.55);color:#7a5a15;border-radius:3px;padding:.15em .45em}
+      .beadlist{display:flex;flex-direction:column;gap:4px}
+      .bead{font-family:var(--mono);font-size:.66rem;background:#f0e6c8;border-left:3px solid var(--red);
+        border-radius:2px;padding:.2em .45em;color:#5a4a2a}
+      .anat-note{font-family:var(--mono);font-size:.64rem;color:var(--fog);text-align:center;
+        margin-top:1em;letter-spacing:.04em}
+    </style>
+    <section class="worker" aria-label="Anatomy of a worker">
+      <div class="worker-cap">one worker <span class="tr">&middot; spawned &rarr; retired</span></div>
+      <div class="parts">
+        <div class="part tmux">
+          <div class="chrome"><i></i><i></i><i></i></div>
+          <div class="plabel">runs in</div>
+          <div class="pname">tmux window</div>
+          <div class="pdesc">one workstream, named &amp; resumable &mdash; where you watch it work</div>
+        </div>
+        <div class="part tree">
+          <div class="plabel">works on</div>
+          <div class="pname">git worktree</div>
+          <div class="pdesc">its own branch off develop &mdash; so two workers never collide</div>
+          <div class="branch">dw/portal-userprefs</div>
+        </div>
+        <div class="part agent">
+          <div class="plabel">driven by</div>
+          <div class="pname">an agent</div>
+          <div class="pdesc">the model doing the work &mdash; chosen per task</div>
+          <div class="agents"><span class="a">claude</span><span class="a">codex</span><span class="a">gemini</span></div>
+        </div>
+        <div class="part beads">
+          <div class="plabel">follows</div>
+          <div class="pname">beads</div>
+          <div class="pdesc">the tasks it works from &amp; reports against</div>
+          <div class="beadlist"><span class="bead">portal user-prefs</span><span class="bead">nav state persistence</span></div>
+        </div>
+      </div>
+      <div class="anat-note">one window &middot; one worktree &middot; one agent &middot; working its beads &mdash; finishes, hands back uncommitted, then retires</div>
+    </section>
+
+    <div class="band-label">3 &middot; Tailscale &mdash; the private mesh, connected by SSH</div>
+    <style>
+      .netfig{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:6px;padding:14px 12px}
+      .netfig svg{width:100%;height:auto;display:block}
+      .netfig svg .pulse{filter:drop-shadow(0 0 2px rgba(255,255,255,.5))}
+      .flowdown{font-family:var(--mono);font-size:.62rem;color:var(--fog);text-align:center;letter-spacing:.06em;margin:1em 0 .5em}
+      .endpoints{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      @media(max-width:560px){.endpoints{grid-template-columns:1fr}}
+      .ep{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:6px;padding:12px;display:flex;flex-direction:column}
+      .ep .ephead{font-family:var(--mono);font-size:.76rem;font-weight:700;letter-spacing:.03em}
+      .ep.beads .ephead{color:var(--sage)}
+      .ep.repo .ephead{color:#c04533}
+      .ep .epsub{font-family:var(--mono);font-size:.6rem;color:var(--fog);letter-spacing:.02em;margin:.15em 0 .7em;line-height:1.45}
+      /* section 4 &mdash; mayor streams beads, workers build pieces */
+      .beadflow{position:relative;height:220px;border-radius:5px;overflow:hidden;
+        background:radial-gradient(circle at 18% 50%,rgba(226,166,60,.08),rgba(20,32,29,.42));
+        border:1px solid rgba(111,156,129,.28)}
+      .claude{position:absolute;transform:translate(-50%,-50%);z-index:3;text-align:center;pointer-events:none}
+      .claude .lbl{font-family:var(--mono);font-size:.55rem;font-weight:700;color:var(--fog);margin-top:1px;letter-spacing:.05em}
+      .rbead{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);
+        background:radial-gradient(circle at 35% 30%,#f2c260,#d68f22);box-shadow:0 0 5px rgba(226,166,60,.8);
+        z-index:2;pointer-events:none;will-change:left,top}
+      .piece{position:absolute;z-index:4;pointer-events:none;will-change:left,top,opacity}
+      .cell{position:absolute;border-radius:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(0,0,0,.28)}
+      /* section 5 &mdash; PR gate + amalgamation well */
+      .ghwrap{position:relative;display:flex;gap:14px;align-items:stretch}
+      @media(max-width:560px){.ghwrap{flex-direction:column}.well{flex:0 0 auto;height:200px}}
+      .pr{flex:0 0 116px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+        border-right:1px dashed var(--ink-3);padding-right:12px}
+      @media(max-width:560px){.pr{flex-basis:auto;border-right:0;border-bottom:1px dashed var(--ink-3);padding:0 0 10px}}
+      .pr .prlabel{font-family:var(--mono);font-size:.62rem;font-weight:700;color:#c04533;letter-spacing:.08em}
+      .people{display:flex;gap:9px}
+      .person{position:relative;transition:transform .22s ease, filter .22s ease}
+      .person.ok{transform:translateY(-3px) scale(1.08);filter:drop-shadow(0 0 4px rgba(111,156,129,.7))}
+      .person .chk{position:absolute;top:-6px;right:-6px;opacity:0;transform:scale(.3);transform-origin:center;transition:opacity .25s ease, transform .28s cubic-bezier(.3,1.5,.5,1)}
+      .person.ok .chk{opacity:1;transform:scale(1)}
+      .well{position:relative;flex:1;height:212px;border-radius:5px;overflow:visible;
+        background:linear-gradient(rgba(20,32,29,.22),rgba(20,32,29,.5));border:1px solid rgba(192,69,51,.22)}
+      @media(max-width:560px){.well{flex:0 0 auto;height:200px}}
+      @keyframes flow{0%{transform:translate(var(--ax,0),var(--ay,-260px)) rotate(var(--rot,-360deg))}44%{transform:translate(var(--bx,0),var(--by,-120px)) rotate(-90deg)}56%{transform:translate(var(--bx,0),var(--by,-120px)) rotate(-90deg)}100%{transform:translate(0,0) rotate(0deg)}}
+    </style>
+    <div class="netfig">
+      <svg viewBox="0 0 720 310" role="img" aria-label="The machines form one Tailscale mesh connected by SSH">
+        <text x="360" y="30" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="15" letter-spacing="3" fill="#e2a63c">TAILSCALE &#183; one private mesh</text>
+        <rect x="40" y="48" width="640" height="230" rx="16" fill="rgba(226,166,60,0.05)" stroke="#e2a63c" stroke-width="1.5" stroke-dasharray="7 5"/>
+        <g stroke="#e2a63c" stroke-width="2" opacity="0.75">
+          <line x1="360" y1="90" x2="140" y2="175"/>
+          <line x1="360" y1="90" x2="580" y2="175"/>
+          <line x1="360" y1="90" x2="360" y2="255"/>
+          <line x1="140" y1="175" x2="580" y2="175"/>
+          <line x1="140" y1="175" x2="360" y2="255"/>
+          <line x1="580" y1="175" x2="360" y2="255"/>
+        </g>
+        <g font-family="ui-monospace,Menlo,monospace" font-size="11" fill="#e2a63c">
+          <text x="232" y="124" text-anchor="middle">ssh</text>
+          <text x="488" y="124" text-anchor="middle">ssh</text>
+          <text x="232" y="230" text-anchor="middle">ssh</text>
+          <text x="488" y="230" text-anchor="middle">ssh</text>
+        </g>
+        <g stroke="none">
+          <g transform="translate(360,90)">
+            <rect x="-30" y="-25" width="60" height="40" rx="4" fill="#e9e3d2" stroke="#93a49a" stroke-width="1.5"/>
+            <rect x="-25" y="-20" width="50" height="30" rx="2" fill="#12201d"/>
+            <rect x="-20" y="-14" width="28" height="3" rx="1.5" fill="#e2a63c"/>
+            <rect x="-20" y="-7" width="36" height="3" rx="1.5" fill="#6f9c81" opacity="0.7"/>
+            <rect x="-20" y="0" width="22" height="3" rx="1.5" fill="#8aa0aa" opacity="0.55"/>
+            <rect x="-6" y="15" width="12" height="7" fill="#c8ba98"/>
+            <rect x="-16" y="21" width="32" height="4" rx="2" fill="#c8ba98"/>
+          </g>
+          <g transform="translate(140,175)">
+            <rect x="-30" y="-25" width="60" height="40" rx="4" fill="#e9e3d2" stroke="#93a49a" stroke-width="1.5"/>
+            <rect x="-25" y="-20" width="50" height="30" rx="2" fill="#12201d"/>
+            <rect x="-20" y="-14" width="30" height="3" rx="1.5" fill="#6f9c81"/>
+            <rect x="-20" y="-7" width="24" height="3" rx="1.5" fill="#8aa0aa" opacity="0.6"/>
+            <rect x="-20" y="0" width="34" height="3" rx="1.5" fill="#8aa0aa" opacity="0.45"/>
+            <rect x="-6" y="15" width="12" height="7" fill="#c8ba98"/>
+            <rect x="-16" y="21" width="32" height="4" rx="2" fill="#c8ba98"/>
+          </g>
+          <g transform="translate(580,175)">
+            <rect x="-30" y="-25" width="60" height="40" rx="4" fill="#e9e3d2" stroke="#93a49a" stroke-width="1.5"/>
+            <rect x="-25" y="-20" width="50" height="30" rx="2" fill="#12201d"/>
+            <rect x="-20" y="-14" width="26" height="3" rx="1.5" fill="#c04533"/>
+            <rect x="-20" y="-7" width="34" height="3" rx="1.5" fill="#8aa0aa" opacity="0.6"/>
+            <rect x="-20" y="0" width="20" height="3" rx="1.5" fill="#8aa0aa" opacity="0.45"/>
+            <rect x="-6" y="15" width="12" height="7" fill="#c8ba98"/>
+            <rect x="-16" y="21" width="32" height="4" rx="2" fill="#c8ba98"/>
+          </g>
+          <g transform="translate(360,255)">
+            <rect x="-26" y="-24" width="52" height="34" rx="3" fill="#e9e3d2" stroke="#93a49a" stroke-width="1.5"/>
+            <rect x="-21" y="-19" width="42" height="24" rx="2" fill="#12201d"/>
+            <rect x="-16" y="-13" width="30" height="3" rx="1.5" fill="#5f9ea0"/>
+            <rect x="-16" y="-6" width="22" height="3" rx="1.5" fill="#8aa0aa" opacity="0.6"/>
+            <rect x="-16" y="1" width="28" height="3" rx="1.5" fill="#8aa0aa" opacity="0.45"/>
+            <path d="M-34 22 L34 22 L27 14 L-27 14 Z" fill="#c8ba98"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <script>
+      (function(){
+        var svg=document.querySelector('.netfig svg'); if(!svg) return;
+        if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var NS='http://www.w3.org/2000/svg';
+        var nodes=[[360,90],[140,175],[580,175],[360,255]];
+        var edges=[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
+        var COL=['#6f9c81','#e2a63c','#c04533','#5f9ea0','#cbb98f'];
+        var live=[], last=null;
+        function spawn(){
+          if(live.length>9) return;
+          var e=edges[Math.floor(Math.random()*edges.length)], a=nodes[e[0]], b=nodes[e[1]];
+          if(Math.random()<0.5){var t=a;a=b;b=t;}
+          var c=document.createElementNS(NS,'circle'); c.setAttribute('class','pulse');
+          c.setAttribute('r','4'); c.setAttribute('cx',a[0]); c.setAttribute('cy',a[1]);
+          c.setAttribute('fill',COL[Math.floor(Math.random()*COL.length)]);
+          svg.appendChild(c);
+          live.push({el:c,ax:a[0],ay:a[1],bx:b[0],by:b[1],t:0,dur:800+Math.random()*700});
+        }
+        function frame(ts){
+          if(last===null) last=ts; var dt=ts-last; last=ts;
+          for(var i=live.length-1;i>=0;i--){
+            var p=live[i]; p.t+=dt/p.dur;
+            if(p.t>=1){ if(p.el.parentNode)p.el.remove(); live.splice(i,1); continue; }
+            p.el.setAttribute('cx',(p.ax+(p.bx-p.ax)*p.t).toFixed(1));
+            p.el.setAttribute('cy',(p.ay+(p.by-p.ay)*p.t).toFixed(1));
+          }
+          requestAnimationFrame(frame);
+        }
+        setInterval(spawn,340); requestAnimationFrame(frame);
+      })();
+    </script>
+    <div class="flowdown">every line is SSH; the web is the tailnet &mdash; I reach any machine by name</div>
+
+    <div class="band-label">4 &middot; Beads &amp; workers &mdash; the mayor sets out beads; workers build the pieces</div>
+    <div class="ep beads">
+      <div class="epsub">The <b style="color:#c04533">mayor</b> (a big Claude) lays out beads &mdash; packets of information &mdash; on a plate. Smaller <b style="color:var(--amber)">Claude workers</b> take one at a time and assemble them into a piece of work.</div>
+      <style>
+        .plate{position:absolute;transform:translate(-50%,-50%);z-index:2;display:flex;gap:4px;padding:5px 7px;
+          border-radius:9px;background:rgba(233,227,210,.12);border:1px solid rgba(226,166,60,.35)}
+        .plate .pb{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f2c260,#d68f22);box-shadow:0 0 4px rgba(226,166,60,.7)}
+        .carried{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);
+          background:radial-gradient(circle at 35% 30%,#f2c260,#d68f22);box-shadow:0 0 5px rgba(226,166,60,.85);z-index:5;pointer-events:none}
+      </style>
+      <div class="beadflow" id="beadflow" aria-hidden="true"></div>
+    </div>
+
+    <div class="band-label">5 &middot; GitHub &mdash; approved pieces amalgamate into the truth</div>
+    <div class="ep repo">
+      <div class="epsub">Each piece goes through a <b style="color:#c04533">PR</b> &mdash; people approve it &mdash; then drops into <b style="color:var(--amber)">GitHub</b> and stacks into one growing amalgamation: the permanent, remodel-able truth.</div>
+      <div class="ghwrap">
+        <div class="pr">
+          <div class="prlabel">PR &middot; approve</div>
+          <div class="people" id="people">
+            <div class="person"><svg width="20" height="22" viewBox="0 0 20 22"><circle cx="10" cy="6" r="5" fill="#cbb98f"/><path d="M2 22 Q2 12 10 12 Q18 12 18 22 Z" fill="#cbb98f"/></svg><span class="chk"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#6f9c81" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 L5 9.5 L10 3"/></svg></span></div>
+            <div class="person"><svg width="20" height="22" viewBox="0 0 20 22"><circle cx="10" cy="6" r="5" fill="#b9a988"/><path d="M2 22 Q2 12 10 12 Q18 12 18 22 Z" fill="#b9a988"/></svg><span class="chk"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#6f9c81" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 L5 9.5 L10 3"/></svg></span></div>
+            <div class="person"><svg width="20" height="22" viewBox="0 0 20 22"><circle cx="10" cy="6" r="5" fill="#cbb98f"/><path d="M2 22 Q2 12 10 12 Q18 12 18 22 Z" fill="#cbb98f"/></svg><span class="chk"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#6f9c81" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5 L5 9.5 L10 3"/></svg></span></div>
+          </div>
+        </div>
+        <div class="well" id="well" aria-hidden="true"></div>
+      </div>
+    </div>
+    <script>
+      (function(){
+        var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var SHAPES=[[[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[2,0],[3,0]],[[0,0],[1,0],[2,0],[1,1]],[[0,0],[0,1],[1,1],[2,1]],[[1,0],[2,0],[0,1],[1,1]]];
+        var COLORS=['#6f9c81','#e2a63c','#c04533','#5f9ea0','#cbb98f'];
+        var QUEUE=[];
+        function rint(n){return Math.floor(Math.random()*n);}
+        function sparkSVG(size,color){return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24"><g stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg>';}
+        function piece(cells,color,cs){
+          var mc=0,mr=0; cells.forEach(function(c){if(c[0]>mc)mc=c[0];if(c[1]>mr)mr=c[1];});
+          var el=document.createElement('div'); el.className='piece';
+          cells.forEach(function(c,idx){var col=(typeof color==='string')?color:(color[idx]||color[0]);var i=document.createElement('i');i.className='cell';i.style.width=cs+'px';i.style.height=cs+'px';i.style.left=(c[0]*(cs+1))+'px';i.style.top=(c[1]*(cs+1))+'px';i.style.background=col;el.appendChild(i);});
+          return {el:el,w:(mc+1)*(cs+1),h:(mr+1)*(cs+1)};
+        }
+
+        /* ---- section 4: plate + workers grab beads, build pieces ---- */
+        (function(){
+          var flow=document.getElementById('beadflow'); if(!flow) return;
+          function C(el){var fr=flow.getBoundingClientRect(),r=el.getBoundingClientRect();return{x:r.left-fr.left+r.width/2,y:r.top-fr.top+r.height/2};}
+          function P(xp,yp){return{x:xp/100*flow.clientWidth,y:yp/100*flow.clientHeight};}
+          var mayor=document.createElement('div'); mayor.className='claude'; mayor.style.left='15%'; mayor.style.top='32%';
+          mayor.innerHTML=sparkSVG(40,'#c04533')+'<div class="lbl">mayor</div>'; flow.appendChild(mayor);
+          var plate=document.createElement('div'); plate.className='plate'; plate.style.left='15%'; plate.style.top='66%';
+          function paint(el,color){ el.style.background='radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), '+color+')'; }
+          function restock(){ while(plate.childElementCount<5){var pb=document.createElement('span');pb.className='pb';var col=COLORS[rint(COLORS.length)];pb.dataset.c=col;paint(pb,col);plate.appendChild(pb);} }
+          restock(); flow.appendChild(plate);
+          function takeBead(){ var b=plate.lastElementChild, col=b?b.dataset.c:COLORS[rint(COLORS.length)]; if(b) plate.removeChild(b); setTimeout(restock,700); return col; }
+          var homes=[[66,18],[66,50],[66,82]];
+          var workers=homes.map(function(h){
+            var w=document.createElement('div'); w.className='claude'; w.style.left=h[0]+'%'; w.style.top=h[1]+'%';
+            w.innerHTML=sparkSVG(22,'#e2a63c')+'<div class="lbl">worker</div>'; flow.appendChild(w);
+            return {el:w,home:h,piece:null,cells:0};
+          });
+          function newPiece(wk){
+            var el=document.createElement('div'); el.className='piece'; flow.appendChild(el);
+            var c=C(wk.el); el.style.left=(c.x+20)+'px'; el.style.top=(c.y-4)+'px';
+            wk.piece={el:el,plan:SHAPES[rint(SHAPES.length)],color:COLORS[rint(COLORS.length)]}; wk.cells=0;
+          }
+          function deposit(wk){
+            if(!wk.piece) newPiece(wk);
+            var c=wk.piece.plan[wk.cells];
+            var cell=document.createElement('i'); cell.className='cell';
+            cell.style.width='11px'; cell.style.height='11px'; cell.style.left=(c[0]*12)+'px'; cell.style.top=(c[1]*12)+'px';
+            cell.style.background=wk.piece.color; cell.style.opacity='0'; cell.style.transform='scale(.4)';
+            cell.style.transition='opacity .25s, transform .25s'; wk.piece.el.appendChild(cell);
+            requestAnimationFrame(function(){ cell.style.opacity='1'; cell.style.transform='scale(1)'; });
+            wk.cells++;
+            if(wk.cells>=wk.piece.plan.length){
+              var pel=wk.piece.el;
+              QUEUE.push({cells:wk.piece.plan, color:wk.piece.color});
+              wk.piece=null; wk.cells=0;
+              setTimeout(function(){ pel.style.transition='top .9s ease-in, opacity .8s ease';
+                pel.style.top=(flow.clientHeight+40)+'px'; pel.style.opacity='0'; }, 400);
+              setTimeout(function(){ if(pel.parentNode) pel.remove(); }, 1500);
+            }
+          }
+          function cycle(wk){
+            var go=0.8+Math.random()*0.6;
+            var pc=C(plate);
+            wk.el.style.transition='left '+go+'s ease-in-out, top '+go+'s ease-in-out';
+            wk.el.style.left=(pc.x/flow.clientWidth*100)+'%'; wk.el.style.top=((pc.y/flow.clientHeight*100)-9)+'%';
+            setTimeout(function(){
+              var col=takeBead();
+              var cb=document.createElement('span'); cb.className='carried'; paint(cb,col); flow.appendChild(cb);
+              var wc=C(wk.el); cb.style.left=wc.x+'px'; cb.style.top=(wc.y+9)+'px';
+              var back=0.8+Math.random()*0.6;
+              wk.el.style.transition='left '+back+'s ease-in-out, top '+back+'s ease-in-out';
+              wk.el.style.left=wk.home[0]+'%'; wk.el.style.top=wk.home[1]+'%';
+              requestAnimationFrame(function(){ cb.style.transition='left '+back+'s ease-in-out, top '+back+'s ease-in-out';
+                var hc=P(wk.home[0],wk.home[1]); cb.style.left=hc.x+'px'; cb.style.top=(hc.y+9)+'px'; });
+              setTimeout(function(){ if(cb.parentNode) cb.remove(); deposit(wk);
+                setTimeout(function(){ cycle(wk); }, 500+Math.random()*2600); }, back*1000+40);
+            }, go*1000+40);
+          }
+          if(reduce){ workers.forEach(function(wk){ newPiece(wk); for(var k=0;k<3;k++) deposit(wk); }); return; }
+          workers.forEach(function(wk){ setTimeout(function(){ cycle(wk); }, Math.random()*2800); });
+        })();
+
+        /* ---- section 5: reviewers drop pieces; grid packs, rows clear like Tetris ---- */
+        (function(){
+          var well=document.getElementById('well'); if(!well) return;
+          var people=Array.prototype.slice.call(document.querySelectorAll('#people .person'));
+          var peopleBox=document.getElementById('people');
+          var cs=13, S=14, H,cols,rows,grid;
+          function init(){ H=well.clientHeight||200; var W=well.clientWidth||300;
+            cols=Math.max(1,Math.floor(W/S)); rows=Math.max(1,Math.floor(H/S));
+            grid=[]; for(var r=0;r<rows;r++){ grid[r]=[]; for(var c=0;c<cols;c++) grid[r][c]=null; } }
+          function colTop(c){ for(var r=rows-1;r>=0;r--){ if(grid[r][c]) return r+1; } return 0; }
+          function rot(cells){
+            var mr=0; cells.forEach(function(c){ if(c[1]>mr) mr=c[1]; });
+            var m=cells.map(function(c){ return [mr-c[1], c[0]]; });
+            var mnx=Infinity,mny=Infinity; m.forEach(function(c){ if(c[0]<mnx)mnx=c[0]; if(c[1]<mny)mny=c[1]; });
+            return m.map(function(c){ return [c[0]-mnx, c[1]-mny]; });
+          }
+          function sig(cells){ return cells.map(function(c){return c[0]+','+c[1];}).sort().join(';'); }
+          function rotations(cells){
+            var res=[cells], cur=cells, seen={}; seen[sig(cells)]=1;
+            for(var i=0;i<3;i++){ cur=rot(cur); var s=sig(cur); if(!seen[s]){ seen[s]=1; res.push(cur); } }
+            return res;
+          }
+          function fits(cells){
+            var mc=0,mr=0; cells.forEach(function(c){if(c[0]>mc)mc=c[0];if(c[1]>mr)mr=c[1];});
+            var prows=mr+1, pcols=mc+1;
+            var minBy={}; cells.forEach(function(c){var by=mr-c[1]; if(minBy[c[0]]===undefined||by<minBy[c[0]]) minBy[c[0]]=by;});
+            var best=[], bestR=Infinity;
+            for(var gx=0; gx<=cols-pcols; gx++){
+              var R=0,set=false;
+              for(var px in minBy){ var need=colTop(gx+ +px)-minBy[px]; if(!set||need>R){R=need;set=true;} }
+              if(R<0)R=0;
+              if(R<bestR){bestR=R;best=[gx];} else if(R===bestR){best.push(gx);}
+            }
+            if(!best.length || bestR+prows>rows) return null;
+            return {gx:best[rint(best.length)], R:bestR, mr:mr, prows:prows};
+          }
+          function bestPlacement(cells0){
+            var best=null;
+            rotations(cells0).forEach(function(rc,idx){ var f=fits(rc); if(f && (best===null || f.R<best.f.R)) best={cells:rc,f:f,k:idx}; });
+            return best;
+          }
+          function reserve(cells,f,color){
+            var els=[];
+            cells.forEach(function(c){ var col=f.gx+c[0], row=f.R+(f.mr-c[1]);
+              if(row<0||row>=rows||col<0||col>=cols) return;
+              var el=document.createElement('i'); el.className='cell';
+              el.style.width=cs+'px'; el.style.height=cs+'px'; el.style.left=(col*S)+'px'; el.style.top=(H-(row+1)*S)+'px';
+              el.style.background=color; el.style.opacity='0';
+              grid[row][col]=el; els.push(el);
+            });
+            return els;
+          }
+          function reveal(els){ els.forEach(function(el){ well.appendChild(el); el.style.opacity='1'; }); }
+          function compact(cleared){
+            var ng=[]; for(var r=0;r<rows;r++){ ng[r]=[]; for(var c=0;c<cols;c++) ng[r][c]=null; }
+            var nr=0;
+            for(var r=0;r<rows;r++){
+              if(cleared.indexOf(r)>=0) continue;
+              for(var c=0;c<cols;c++){ var el=grid[r][c]; if(el){ ng[nr][c]=el; el.style.transition='top .25s ease'; el.style.top=(H-(nr+1)*S)+'px'; } }
+              nr++;
+            }
+            grid=ng;
+          }
+          function clearFullRows(){
+            var full=[];
+            for(var r=0;r<rows;r++){ var isF=true; for(var c=0;c<cols;c++){ if(!grid[r][c]){isF=false;break;} } if(isF) full.push(r); }
+            if(!full.length) return;
+            full.forEach(function(r){ for(var c=0;c<cols;c++){ var el=grid[r][c]; if(el){ el.style.transition='opacity .25s ease, transform .25s ease'; el.style.transform='scale(1.3)'; el.style.opacity='0'; (function(e){ setTimeout(function(){ if(e.parentNode) e.remove(); },260); })(el); grid[r][c]=null; } } });
+            setTimeout(function(){ compact(full); }, 270);
+          }
+          function run(item,animate){
+            var bp=bestPlacement(item.cells);
+            if(!bp){
+              var kids=Array.prototype.slice.call(well.children);
+              kids.forEach(function(k){ k.style.transition='opacity .5s ease'; k.style.opacity='0'; setTimeout(function(){ if(k.parentNode) k.remove(); }, 540); });
+              init(); bp=bestPlacement(item.cells); if(!bp) return false;
+            }
+            var cells=bp.cells, f=bp.f, color=item.color;
+            var leftPx=f.gx*S, landTop=H-(f.R+f.prows)*S;
+            var els=reserve(cells,f,color);
+            if(!animate){ reveal(els); clearFullRows(); return true; }
+            var pc=piece(cells,color,cs);
+            pc.el.style.left=leftPx+'px'; pc.el.style.top=landTop+'px';
+            pc.el.style.transformOrigin=(pc.w/2)+'px '+(pc.h/2)+'px';
+            well.appendChild(pc.el);
+            var wr=well.getBoundingClientRect(), pb=peopleBox.getBoundingClientRect();
+            var bx=((pb.left+pb.width/2)-wr.left)-leftPx-pc.w/2;
+            var by=((pb.top+pb.height/2)-wr.top)-landTop-pc.h/2;
+            pc.el.style.setProperty('--bx',bx+'px'); pc.el.style.setProperty('--by',by+'px');
+            pc.el.style.setProperty('--ax',bx+'px'); pc.el.style.setProperty('--ay',(by-72)+'px');
+            pc.el.style.setProperty('--rot',(-(360+90*bp.k))+'deg');
+            pc.el.style.animation='flow 1s cubic-bezier(.4,0,.6,1)';
+            setTimeout(function(){ people.forEach(function(pp,i){ setTimeout(function(){pp.classList.add('ok');}, i*70); }); }, 420);
+            setTimeout(function(){ people.forEach(function(pp){pp.classList.remove('ok');}); }, 1050);
+            setTimeout(function(){ if(pc.el.parentNode) pc.el.remove(); reveal(els); clearFullRows(); }, 1000);
+            return true;
+          }
+          init();
+          if(reduce){ for(var k=0;k<16;k++){ if(!run({cells:SHAPES[k%SHAPES.length],color:COLORS[k%COLORS.length]},false)) break; } return; }
+          setInterval(function(){ if(QUEUE.length) run(QUEUE.shift(),true); }, 400);
+        })();
+      })();
+    </script>
+
+    <div class="foot">
+      Everything rides the tailnet &mdash; I can sit at durin, phoenix, or a laptop and reach the same mayors, the same beads, the same code.
+    </div>
+  </div>
+</div>
