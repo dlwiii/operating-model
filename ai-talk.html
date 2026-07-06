@@ -69,6 +69,10 @@ li .hl{font-style:italic;color:var(--accent);font-weight:600}
 #hint{position:fixed;top:14px;left:20px;color:#46566f;
   font-family:'Space Mono',ui-monospace,monospace;font-size:12px;
   letter-spacing:.08em;z-index:5}
+#home{position:fixed;top:14px;right:20px;color:#46566f;text-decoration:none;
+  font-family:'Space Mono',ui-monospace,monospace;font-size:12px;
+  letter-spacing:.08em;z-index:8}
+#home:hover{color:var(--accent)}
 .nav{position:fixed;top:50%;transform:translateY(-50%);z-index:7;cursor:pointer;
   width:56px;height:56px;border:none;border-radius:50%;background:rgba(255,77,109,.16);
   color:var(--fg);font-size:30px;line-height:1;display:flex;align-items:center;
@@ -182,6 +186,7 @@ li .hl{font-style:italic;color:var(--accent);font-weight:600}
 <button id="next" class="nav" aria-label="next">›</button>
 <div id="prog"></div><div id="count"></div>
 <div id="hint">← → NAV · N NOTES · F FULLSCREEN</div>
+<a id="home" href="https://dlwiii.github.io/operating-model/">operating model ↩</a>
 <div id="notes"></div>
 <script>
 const slides=[...document.querySelectorAll('.slide')];
